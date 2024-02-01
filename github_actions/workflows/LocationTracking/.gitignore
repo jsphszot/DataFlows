@@ -1,0 +1,5 @@
+*.csv
+*.ini
+secrets.json
+looker.ini
+.env
