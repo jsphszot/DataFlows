@@ -1,0 +1,26 @@
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '21 4 * * *' # https://crontab.guru/
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: [self-hosted, Data-Analytics]
+    env: 
+      SNOWFLAKE_ACCOUNT: ada43147.us-east-1
+      SNOWFLAKE_USER: ingestion_user
+      SNOWFLAKE_ROLE: ingestion_role
+      SNOWFLAKE_WH: ingestion_warehouse
+      SNOWFLAKE_PASSWORD: ${{ secrets.INGESTION_PASSWORD }}
+      LOOKERSDK_BASE_URL: ${{ secrets.LOOKERSDK_BASE_URL }}
+      LOOKERSDK_CLIENT_ID: ${{ secrets.LOOKERSDK_CLIENT_ID }}
+      LOOKERSDK_CLIENT_SECRET: ${{ secrets.LOOKERSDK_CLIENT_SECRET }}
+      
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+    - run: pip install -r  LocationTracking/requirements.txt
+    - run: python LocationTracking/node_types.py
